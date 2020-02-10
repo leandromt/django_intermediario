@@ -5,7 +5,7 @@
 {% block content %}
     <div class="container">
         <h3>Login</h3>
-        <form action="/login" method="POST">
+        <form action="/login/" method="POST">
             {% csrf_token %}
             {% if message %}
             <div class="form-gourp">
