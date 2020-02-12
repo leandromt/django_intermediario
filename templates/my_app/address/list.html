@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}Listagem de endereços {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3>Listagem de endereços</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Endereço</th>
+                <th>Clomplemento</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Ação</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for address in addresses %}
+                <tr>
+                    <td>{{ address.id }}</td>
+                    <td>{{ address.address }}</td>
+                    <td>{{ address.address_complement_normalize }}</td>
+                    <td>{{ address.city }}</td>
+                    <td>{{ address.state }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

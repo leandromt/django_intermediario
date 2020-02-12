@@ -20,5 +20,9 @@ class Address(models.Model):
     class Meta:
         verbose_name_plural = 'Addresses'
 
+    @property
+    def address_complement_normalize(self):
+        return '' if self.address_complement is None else self.address_complement
+
     def __str__(self):
         return '%s %s %s' % (self.address, self.city, self.state)
