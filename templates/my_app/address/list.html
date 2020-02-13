@@ -24,6 +24,9 @@
                     <td>{{ address.address_complement_normalize }}</td>
                     <td>{{ address.city }}</td>
                     <td>{{ address.state }}</td>
+                    <td>
+                        <a href="/addresses/{{ address.id }}/update/">Editar</a> |
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
