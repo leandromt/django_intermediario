@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from .models import Address, STATE_CHOICE
+from .forms import AddressForm
 
 
 def login(request: HttpRequest):
@@ -47,18 +48,21 @@ def address_list(request):
 @login_required(login_url='/login')
 def address_create(request):
     if request.method == 'GET':
-        return render(request, 'my_app/address/create.html', {'states': STATE_CHOICE})
-
-    Address.objects.create(
-        address=request.POST.get('address'),
-        address_complement=request.POST.get('address'),
-        city=request.POST.get('city'),
-        state=request.POST.get('state'),
-        country=request.POST.get('country'),
-        user=request.user
-    )
-
-    return redirect('/addresses/')
+        form = AddressForm()
+    else:
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            Address.objects.create(
+                address=form.cleaned_data['address'],
+                address_complement=form.cleaned_data['address'],
+                city=form.cleaned_data['city'],
+                state=form.cleaned_data['state'],
+                country=form.cleaned_data['country'],
+                user=request.user
+            )
+            return redirect('/addresses/')
+        
+    return render(request, 'my_app/address/create.html', {'form': form})
 
 
 @login_required(login_url='/login')
@@ -66,7 +70,8 @@ def address_update(request, id):
     address = Address.objects.get(id=id)
 
     if request.method == 'GET':
-        return render(request, 'my_app/address/update.html', {'states': STATE_CHOICE, 'address': address})
+        form = AddressForm()
+        return render(request, 'my_app/address/update.html', {'form': form})
 
     address.address = request.POST.get('address')
     address.address_complement = request.POST.get('address_complement')
