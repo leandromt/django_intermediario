@@ -87,3 +87,15 @@ def address_update(request, id):
             return redirect(reverse('my_app:address_list'))
 
     return render(request, 'my_app/address/update.html', {'address': address, 'form': form, 'form_submitted': form_submitted})
+
+
+@login_required(login_url='/login')
+def address_destroy(request, id):
+    address = Address.objects.get(id=id)
+    if request.method == 'GET':
+        form = AddressForm(address.__dict__)
+    else:
+        address.delete()
+        return redirect(reverse('my_app:address_list'))
+
+    return render(request, 'my_app/address/destroy.html', {'address': address, 'form': form})
