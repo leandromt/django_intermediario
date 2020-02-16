@@ -6,7 +6,7 @@
     <div class="container">
         <h3>Listagem de endereços</h3>
         <div class="p-3">
-            <a href="{% url 'address_create' %}" class="btn btn-primary">Adicionar endereço</a>
+            <a href="{% url 'my_app:address_create' %}" class="btn btn-primary">Adicionar endereço</a>
         </div>
         <table class="table">
             <thead>
@@ -28,7 +28,7 @@
                     <td>{{ address.city }}</td>
                     <td>{{ address.state }}</td>
                     <td>
-                        <a href="{% url 'address_update' address.id %}">Editar</a> |
+                        <a href="{% url 'my_app:address_update' address.id %}">Editar</a> |
                     </td>
                 </tr>
                 {% endfor %}

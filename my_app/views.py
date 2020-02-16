@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from .models import Address, STATE_CHOICE
@@ -62,7 +62,7 @@ def address_create(request):
                 country=form.cleaned_data['country'],
                 user=request.user
             )
-            return redirect('/addresses/')
+            return redirect(reverse('my_app:address_list'))
 
     return render(request, 'my_app/address/create.html', {'form': form, 'form_submitted': form_submitted})
 
@@ -84,6 +84,6 @@ def address_update(request, id):
             address.country = request.POST.get('country')
             # address.user = request.user
             address.save()
-            return redirect('/addresses/')
+            return redirect(reverse('my_app:address_list'))
 
     return render(request, 'my_app/address/update.html', {'address': address, 'form': form, 'form_submitted': form_submitted})
