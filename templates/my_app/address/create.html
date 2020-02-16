@@ -5,9 +5,8 @@
 {% block content %}
     <div class="container">
         <h3>Novo endereço</h3>
-        <form method="post" action="/addresses/create/" class="class">
-            {% csrf_token %}
-            {{ form }}
+        <form method="post" action="{% url 'address_create' %}" class="{% if form_submitted %}was-validated{% endif %}">
+            {% include 'my_app/address/form_django.html' %}
             <button type="submit" class="btn btn-primary">Criar</button>
         </form>
     </div>

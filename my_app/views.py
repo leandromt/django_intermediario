@@ -47,9 +47,11 @@ def address_list(request):
 
 @login_required(login_url='/login')
 def address_create(request):
+    form_submitted = False
     if request.method == 'GET':
         form = AddressForm()
     else:
+        form_submitted = True
         form = AddressForm(request.POST)
         if form.is_valid():
             Address.objects.create(
@@ -61,26 +63,27 @@ def address_create(request):
                 user=request.user
             )
             return redirect('/addresses/')
-        
-    return render(request, 'my_app/address/create.html', {'form': form})
+
+    return render(request, 'my_app/address/create.html', {'form': form, 'form_submitted': form_submitted})
 
 
 @login_required(login_url='/login')
 def address_update(request, id):
+    form_submitted = False
     address = Address.objects.get(id=id)
-
     if request.method == 'GET':
-        form = AddressForm()
-        return render(request, 'my_app/address/update.html', {'form': form})
+        form = AddressForm(address.__dict__)
+    else:
+        form_submitted = True
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            address.address = request.POST.get('address')
+            address.address_complement = request.POST.get('address_complement')
+            address.city = request.POST.get('city')
+            address.state = request.POST.get('state')
+            address.country = request.POST.get('country')
+            # address.user = request.user
+            address.save()
+            return redirect('/addresses/')
 
-    address.address = request.POST.get('address')
-    address.address_complement = request.POST.get('address_complement')
-    address.city = request.POST.get('city')
-    address.state = request.POST.get('state')
-    address.country = request.POST.get('country')
-    # address.user = request.user
-
-    address.save()
-
-
-    return redirect('/addresses/')
+    return render(request, 'my_app/address/update.html', {'address': address, 'form': form, 'form_submitted': form_submitted})

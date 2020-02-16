@@ -5,6 +5,9 @@
 {% block content %}
     <div class="container">
         <h3>Listagem de endereços</h3>
+        <div class="p-3">
+            <a href="{% url 'address_create' %}" class="btn btn-primary">Adicionar endereço</a>
+        </div>
         <table class="table">
             <thead>
             <tr>
@@ -25,7 +28,7 @@
                     <td>{{ address.city }}</td>
                     <td>{{ address.state }}</td>
                     <td>
-                        <a href="/addresses/{{ address.id }}/update/">Editar</a> |
+                        <a href="{% url 'address_update' address.id %}">Editar</a> |
                     </td>
                 </tr>
                 {% endfor %}
