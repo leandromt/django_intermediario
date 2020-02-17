@@ -2,29 +2,47 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
 from .models import Address, STATE_CHOICE
 from .forms import AddressForm
 
 
-def login(request: HttpRequest):
+class LoginView(TemplateView):
+    template_name = 'my_app/login.html'
 
-    if request.method == 'GET':
-        return render(request, 'my_app/login.html')
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-    username = request.POST.get('username')
-    password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
 
-    user = authenticate(username=username, password=password)
+        if user:
+            django_login(request, user)
+            return redirect('/home/')
 
-    if user:
-        print(user)
-        #return HttpResponse('Usuário válido!!')
-        django_login(request, user)
-        #return HttpResponseRedirect('/home/')
-        return redirect('/home/')
+        message = 'Usuário ou senha inválidos!'
+        return self.render_to_response({'message': message})
 
-    message = 'Usuário ou senha inválidos!'
-    return render(request, 'my_app/login.html', {'message': message})
+
+# def login(request: HttpRequest):
+#
+#     if request.method == 'GET':
+#         return render(request, 'my_app/login.html')
+#
+#     username = request.POST.get('username')
+#     password = request.POST.get('password')
+#
+#     user = authenticate(username=username, password=password)
+#
+#     if user:
+#         print(user)
+#         #return HttpResponse('Usuário válido!!')
+#         django_login(request, user)
+#         #return HttpResponseRedirect('/home/')
+#         return redirect('/home/')
+#
+#     message = 'Usuário ou senha inválidos!'
+#     return render(request, 'my_app/login.html', {'message': message})
 
 
 @login_required(login_url='/login')
